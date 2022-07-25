@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  database:
+    container_name: diplomDB
+    image: 'postgres'
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+
+  cloudapi:
+    image: cloudstorageapi:1.0
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/postgres
+    depends_on:
+      - database
+
+  app_front:
+    image: cloudstoragefront:1.0
+    ports:
+      - "8080:8080"
+    environment:
+      TEST: env_docker_compose
+    build: ./
